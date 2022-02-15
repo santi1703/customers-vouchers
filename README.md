@@ -1,64 +1,61 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+### About CustomerVouchers API
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+On this project you will be available to check for available customers by their ID's with their respectives
+vouchers assigned onto them.
 
-## About Laravel
+If you are running this system for the first time, there are a couple of thing that you'll have to do to make
+sure that it works fine.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Please copy **.env.example** file and rename it to **.env** and make sure that you have a concurring connection with an MySQL database, and
+create a schema on it named _customer_vouchers_, or the name that you like most, by please make sure that
+the value at _DB_DATABASE_ is that same name.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Please make sure that you have Laravel up and running.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Once you made sure that Laravel is running on the machine, please execute the following command on a terminal
 
-## Learning Laravel
+> _php artisan key:generate_
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+In order to add the APP_KEY parameter to your _.env_ file
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+After that, you will have to execute this command:
 
-## Laravel Sponsors
+> _php artisan migrate:fresh --seed_
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+In order to migrate the required data on to the database.
 
-### Premium Partners
+This will provide you with a bunch of mocked data for testing purposes.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+For using the endpoints required I created a fake user as well, and its credentials are:
 
-## Contributing
+> email:challenge@test.com
+>
+> password:123456
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+In order to obtain permissions for the data endpoints, you will need to authenticate yourself
+(with the provided fake user, for instance) on:
 
-## Code of Conduct
+> _POST_ /api/authenticate
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+This endpoint expects parameters _email_ and _password_ to be included in the request as _x-www-form-urlencoded_
+format, which you will be able to do so using tools such as Postman. If the authentication is successfull
+you will have a Json response with the success status of the operation and the token associated with the user.
 
-## Security Vulnerabilities
+______
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+> _GET_ /api/customers/{id}
 
-## License
+Making requests on this point with the id of the customer that you want to look up for, will fetch the customer
+associated with the given id (if any) and its related vouchers.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+If no customer is found with the provided id, it will throw a 404 exception.
+_____
+
+> _GET_ /api/vouchers/{id}
+
+Making requests on this point with the id of the voucher that you want to check for validity, a token
+will be valid as its _valid_through_ date time attribute is a date in the future.
+
+If no voucher is found with the provided id, it will throw a 404 exception.
+
+
