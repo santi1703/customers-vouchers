@@ -24,3 +24,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('vouchers/{id}', [VoucherController::class, 'checkValidity']);
 });
+
+Route::fallback(function () {
+    return response()->json([
+        'error' => 'Requested endpoint does not exist.',
+    ]);
+});

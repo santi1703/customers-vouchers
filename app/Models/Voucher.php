@@ -14,6 +14,15 @@ class Voucher extends Model
 
     protected $dates = ['valid_through'];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'valid_through' => 'datetime:Y-m-d h:i:s',
+    ];
+
     public function getIsValidAttribute()
     {
         return Carbon::now()->lessThan($this->valid_through);
